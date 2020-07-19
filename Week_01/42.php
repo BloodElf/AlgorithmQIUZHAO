@@ -1,12 +1,8 @@
 <?php
 class Solution {
 
-    // 思路： 找左右柱子
-
-    // 循环：
-        // 如果右边第一个比当前大，则不能盛水
-        // 找到右边 大于等于当前的柱子
-        // 计算包围范围内的容量
+    // 思路：
+        // i 位置的存水量 =  左右两边最高的柱中最小的一个柱子高度 - 当前位置高度
 
     /**
      * @param Integer[] $height
@@ -16,42 +12,29 @@ class Solution {
         $length = count($height);
 
         $result = 0;
-        for ($i = 0; $i < $length - 2; ) {
-            // echo "i:" . $i .PHP_EOL;
-            // 左柱
-            if ($height[$i + 1] >= $height[$i]) {
-                $i++;
-                continue;
-            }
+        $maxLeft = 0;
+        $maxRight = 0;
 
-            // 找到右边比当前小, 可以盛水
-            // 找右柱
-            for ($j = $i + 2; $j < $length; $j++) {
-//                echo  '**************' .PHP_EOL;
-//                echo 'i' . $i .PHP_EOL;
-//                echo 'height i:' . $height[$i] .PHP_EOL;
-//                echo 'j' . $j .PHP_EOL;
-//                echo 'height j:' . $height[$j] .PHP_EOL;
-                if ($height[$j] >= $height[$i]) {
-                    // echo "j:" . $j .PHP_EOL;
-                    // 找到右柱
-                    // 容量（去掉柱子的）
-                    $v = min($height[$j], $height[$i]) * ($j - $i - 1);
-                    for ($k = $i + 1; $k < $j; $k++) {
-                      $v -= $height[$k];
-                    }
-                    // echo 'v:' . $v .PHP_EOL;
-                    $result += $v;
-                    $i = $j;
-                    break;
-                }else {
-                    if ($j == ($length - 1)) {
-                        // 没找到
-                        // return $result;
-                        $i++;
-                        break;
-                    }
+        $left = 1;
+        $right = $length - 2;
+
+         for ($i = 1; $i < $length - 1; $i++) {
+            // 左边柱子小于右边柱子
+            if ($height[$left - 1] < $height[$right + 1]) {
+                $maxLeft = max($maxLeft, $height[$left - 1]);
+                // 两边最小的柱子
+                $min = $maxLeft;
+                if ($min > $height[$left]) {
+                    $result += $min - $height[$left];
                 }
+                $left++;
+            } else {
+                $maxRight = max($maxRight, $height[$right + 1]);
+                $min = $maxRight;
+                if ($min > $height[$right]) {
+                    $result += $min - $height[$right];
+                }
+                $right--;
             }
         }
         return $result;
