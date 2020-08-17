@@ -71,7 +71,4 @@ class Solution()
     }
     return $r;
 ```
-递归模板
-
-分治模板
 
